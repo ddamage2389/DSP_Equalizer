@@ -1,6 +1,9 @@
 package player;
 
+import effects.Distortion;
+import effects.Delay;
 import equalizer.Equalizer;
+
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +21,19 @@ public class AudioPlayer {
     private boolean stopStatus;
     private double gain;
     private final Equalizer equalizer;
+    private final Delay delay;
+    private boolean isDelay;
+    private final Distortion distortion;
+    private boolean isDistortion;
 
     public AudioPlayer(File musicFile) {
         this.currentMusicFile = musicFile;
         this.equalizer = new Equalizer();
         this.gain = 1.0;
+        this.isDistortion = false;
+        this.distortion = new Distortion();
+        this.isDelay = false;
+        this.delay = new Delay();
     }
 
 
@@ -42,6 +53,14 @@ public class AudioPlayer {
                 if (this.pauseStatus) this.pause();
 
                 if (this.stopStatus) break;
+
+                if (this.isDistortion) {
+                    this.distortion(this.bufferShort);
+                }
+
+                if (this.isDelay) {
+                    this.delay(this.bufferShort);
+                }
 
                 equalizer.setInputSignal(this.bufferShort);
                 this.equalizer.equalization();
@@ -109,6 +128,32 @@ public class AudioPlayer {
 
     public Equalizer getEqualizer() {
         return this.equalizer;
+    }
+
+    private void distortion(short[] inputSamples) {
+        this.distortion.setInputSampleStream(inputSamples);
+        this.distortion.createEffect();
+    }
+
+    public boolean distortionIsActive() {
+        return this.isDistortion;
+    }
+
+    public void setDistortion(boolean b) {
+        this.isDistortion = b;
+    }
+
+    private void delay(short[] inputSamples) throws ExecutionException, InterruptedException {
+        delay.setInputSampleStream(inputSamples);
+        delay.createEffect();
+    }
+
+    public boolean delayIsActive() {
+        return this.isDelay;
+    }
+
+    public void setDelay(boolean b) {
+        this.isDelay = b;
     }
 
 }

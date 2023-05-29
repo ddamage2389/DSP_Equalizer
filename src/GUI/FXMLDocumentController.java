@@ -89,6 +89,22 @@ public class FXMLDocumentController implements Initializable {
         System.exit(0);
     }
 
+    @FXML
+    private void delayBox() {
+        System.out.println("DELAY");
+        if (!this.audioPlayer.delayIsActive())
+            this.audioPlayer.setDelay(true);
+        else this.audioPlayer.setDelay(false);
+    }
+
+    @FXML
+    private void distortionBox() {
+        System.out.println("DISTORTION");
+        if (!this.audioPlayer.distortionIsActive())
+            this.audioPlayer.setDistortion(true);
+        else this.audioPlayer.setDistortion(false);
+    }
+
     private void resetSliders() {
         Slider0.setValue(1);
         Slider1.setValue(1);
